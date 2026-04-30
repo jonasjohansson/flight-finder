@@ -38,21 +38,73 @@ const ORIGINS = {
 };
 
 const DESTINATIONS = {
-  TYO: { iata: 'TYO', name: 'tokyo-japan', label: 'Tokyo (any airport)' },
-  ICN: { iata: 'ICN', name: 'seoul-south-korea', label: 'Seoul (ICN)' },
-  KIX: { iata: 'KIX', name: 'osaka-japan', label: 'Osaka (KIX)' },
-  HKG: { iata: 'HKG', name: 'hong-kong-hong-kong', label: 'Hong Kong (HKG)' },
-  TPE: { iata: 'TPE', name: 'taipei-taiwan', label: 'Taipei (TPE)' },
-  BKK: { iata: 'BKK', name: 'bangkok-thailand', label: 'Bangkok (BKK)' },
-  SIN: { iata: 'SIN', name: 'singapore-singapore', label: 'Singapore (SIN)' },
-  PEK: { iata: 'PEK', name: 'beijing-china', label: 'Beijing (PEK)' },
-  PVG: { iata: 'PVG', name: 'shanghai-china', label: 'Shanghai (PVG)' },
-  DEL: { iata: 'DEL', name: 'new-delhi-india', label: 'Delhi (DEL)' },
-  BOM: { iata: 'BOM', name: 'mumbai-india', label: 'Mumbai (BOM)' },
-  DPS: { iata: 'DPS', name: 'bali-indonesia', label: 'Bali (DPS)' },
-  KUL: { iata: 'KUL', name: 'kuala-lumpur-malaysia', label: 'Kuala Lumpur (KUL)' },
-  HAN: { iata: 'HAN', name: 'hanoi-vietnam', label: 'Hanoi (HAN)' },
-  SGN: { iata: 'SGN', name: 'ho-chi-minh-city-vietnam', label: 'Ho Chi Minh City (SGN)' },
+  // Asia — Japan / Korea
+  TYO: { iata: 'TYO', name: 'tokyo-japan', label: 'Tokyo, Japan' },
+  KIX: { iata: 'KIX', name: 'osaka-japan', label: 'Osaka, Japan' },
+  FUK: { iata: 'FUK', name: 'fukuoka-japan', label: 'Fukuoka, Japan' },
+  OKA: { iata: 'OKA', name: 'okinawa-japan', label: 'Okinawa, Japan' },
+  CTS: { iata: 'CTS', name: 'sapporo-japan', label: 'Sapporo, Japan' },
+  ICN: { iata: 'ICN', name: 'seoul-south-korea', label: 'Seoul, South Korea' },
+  PUS: { iata: 'PUS', name: 'busan-south-korea', label: 'Busan, South Korea' },
+  // Greater China
+  HKG: { iata: 'HKG', name: 'hong-kong-hong-kong', label: 'Hong Kong' },
+  TPE: { iata: 'TPE', name: 'taipei-taiwan', label: 'Taipei, Taiwan' },
+  PEK: { iata: 'PEK', name: 'beijing-china', label: 'Beijing, China' },
+  PVG: { iata: 'PVG', name: 'shanghai-china', label: 'Shanghai, China' },
+  CAN: { iata: 'CAN', name: 'guangzhou-china', label: 'Guangzhou, China' },
+  // Southeast Asia
+  BKK: { iata: 'BKK', name: 'bangkok-thailand', label: 'Bangkok, Thailand' },
+  CNX: { iata: 'CNX', name: 'chiang-mai-thailand', label: 'Chiang Mai, Thailand' },
+  HKT: { iata: 'HKT', name: 'phuket-thailand', label: 'Phuket, Thailand' },
+  SIN: { iata: 'SIN', name: 'singapore-singapore', label: 'Singapore' },
+  KUL: { iata: 'KUL', name: 'kuala-lumpur-malaysia', label: 'Kuala Lumpur, Malaysia' },
+  DPS: { iata: 'DPS', name: 'bali-indonesia', label: 'Bali, Indonesia' },
+  CGK: { iata: 'CGK', name: 'jakarta-indonesia', label: 'Jakarta, Indonesia' },
+  HAN: { iata: 'HAN', name: 'hanoi-vietnam', label: 'Hanoi, Vietnam' },
+  SGN: { iata: 'SGN', name: 'ho-chi-minh-city-vietnam', label: 'Ho Chi Minh City, Vietnam' },
+  PNH: { iata: 'PNH', name: 'phnom-penh-cambodia', label: 'Phnom Penh, Cambodia' },
+  REP: { iata: 'REP', name: 'siem-reap-cambodia', label: 'Siem Reap, Cambodia' },
+  RGN: { iata: 'RGN', name: 'yangon-myanmar', label: 'Yangon, Myanmar' },
+  VTE: { iata: 'VTE', name: 'vientiane-laos', label: 'Vientiane, Laos' },
+  MNL: { iata: 'MNL', name: 'manila-philippines', label: 'Manila, Philippines' },
+  // South Asia
+  DEL: { iata: 'DEL', name: 'new-delhi-india', label: 'Delhi, India' },
+  BOM: { iata: 'BOM', name: 'mumbai-india', label: 'Mumbai, India' },
+  BLR: { iata: 'BLR', name: 'bangalore-india', label: 'Bangalore, India' },
+  CMB: { iata: 'CMB', name: 'colombo-sri-lanka', label: 'Colombo, Sri Lanka' },
+  KTM: { iata: 'KTM', name: 'kathmandu-nepal', label: 'Kathmandu, Nepal' },
+  DAC: { iata: 'DAC', name: 'dhaka-bangladesh', label: 'Dhaka, Bangladesh' },
+  // Middle East
+  DXB: { iata: 'DXB', name: 'dubai-united-arab-emirates', label: 'Dubai, UAE' },
+  DOH: { iata: 'DOH', name: 'doha-qatar', label: 'Doha, Qatar' },
+  IST: { iata: 'IST', name: 'istanbul-turkey', label: 'Istanbul, Turkey' },
+  TLV: { iata: 'TLV', name: 'tel-aviv-israel', label: 'Tel Aviv, Israel' },
+  // Oceania
+  SYD: { iata: 'SYD', name: 'sydney-australia', label: 'Sydney, Australia' },
+  MEL: { iata: 'MEL', name: 'melbourne-australia', label: 'Melbourne, Australia' },
+  AKL: { iata: 'AKL', name: 'auckland-new-zealand', label: 'Auckland, New Zealand' },
+  // Africa
+  CAI: { iata: 'CAI', name: 'cairo-egypt', label: 'Cairo, Egypt' },
+  CPT: { iata: 'CPT', name: 'cape-town-south-africa', label: 'Cape Town, South Africa' },
+  RAK: { iata: 'RAK', name: 'marrakech-morocco', label: 'Marrakech, Morocco' },
+  NBO: { iata: 'NBO', name: 'nairobi-kenya', label: 'Nairobi, Kenya' },
+  // Americas
+  JFK: { iata: 'JFK', name: 'new-york-united-states', label: 'New York (JFK), USA' },
+  LAX: { iata: 'LAX', name: 'los-angeles-united-states', label: 'Los Angeles, USA' },
+  SFO: { iata: 'SFO', name: 'san-francisco-united-states', label: 'San Francisco, USA' },
+  ORD: { iata: 'ORD', name: 'chicago-united-states', label: 'Chicago, USA' },
+  YYZ: { iata: 'YYZ', name: 'toronto-canada', label: 'Toronto, Canada' },
+  YVR: { iata: 'YVR', name: 'vancouver-canada', label: 'Vancouver, Canada' },
+  MEX: { iata: 'MEX', name: 'mexico-city-mexico', label: 'Mexico City, Mexico' },
+  HAV: { iata: 'HAV', name: 'havana-cuba', label: 'Havana, Cuba' },
+  GRU: { iata: 'GRU', name: 'sao-paulo-brazil', label: 'São Paulo, Brazil' },
+  GIG: { iata: 'GIG', name: 'rio-de-janeiro-brazil', label: 'Rio de Janeiro, Brazil' },
+  EZE: { iata: 'EZE', name: 'buenos-aires-argentina', label: 'Buenos Aires, Argentina' },
+  SCL: { iata: 'SCL', name: 'santiago-chile', label: 'Santiago, Chile' },
+  // Europe (less common from Sweden but searchable)
+  LIS: { iata: 'LIS', name: 'lisbon-portugal', label: 'Lisbon, Portugal' },
+  KEF: { iata: 'KEF', name: 'reykjavik-iceland', label: 'Reykjavík, Iceland' },
+  ATH: { iata: 'ATH', name: 'athens-greece', label: 'Athens, Greece' },
 };
 
 function loadState() {
@@ -82,17 +134,52 @@ function buildLinks(origin, destination, params) {
   }));
 }
 
+function destinationDisplayValue(key) {
+  const d = DESTINATIONS[key];
+  return d ? `${d.label} (${d.iata})` : '';
+}
+
+function findDestinationKey(value) {
+  if (!value) return null;
+  const v = value.trim().toLowerCase();
+  // Match by displayed value (case-insensitive)
+  for (const [key, d] of Object.entries(DESTINATIONS)) {
+    if (`${d.label} (${d.iata})`.toLowerCase() === v) return key;
+  }
+  // Match by raw IATA in parens — e.g. "(TYO)" or just "TYO"
+  const iataMatch = value.match(/\b([A-Z]{3})\b/i);
+  if (iataMatch) {
+    const iata = iataMatch[1].toUpperCase();
+    for (const [key, d] of Object.entries(DESTINATIONS)) {
+      if (d.iata === iata) return key;
+    }
+  }
+  // Match by any label substring
+  for (const [key, d] of Object.entries(DESTINATIONS)) {
+    if (d.label.toLowerCase().includes(v) && v.length >= 3) return key;
+  }
+  return null;
+}
+
 function renderForm(root) {
   const state = loadState();
   const today = new Date().toISOString().slice(0, 10);
   const inAWeek = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-  const destOptions = Object.entries(DESTINATIONS)
-    .map(([k, v]) => `<option value="${k}" ${state.destination === k ? 'selected' : ''}>${v.label}</option>`)
+  const datalistOptions = Object.entries(DESTINATIONS)
+    .map(([k, v]) => `<option value="${v.label} (${v.iata})">`)
     .join('');
+  const initialDestKey = state.destination && DESTINATIONS[state.destination] ? state.destination : 'TYO';
+  const initialDestValue = destinationDisplayValue(initialDestKey);
 
   root.innerHTML = `
     <form id="searchForm">
-      <p><label>To: <select id="destination">${destOptions}</select></label></p>
+      <p>
+        <label>To:
+          <input type="text" id="destination" list="destinations"
+                 value="${initialDestValue}" placeholder="Type city, country, or IATA code" required>
+        </label>
+        <datalist id="destinations">${datalistOptions}</datalist>
+      </p>
       <p><label>Depart: <input type="date" id="depart" min="${today}" value="${state.depart || today}" required></label></p>
       <p><label>Return: <input type="date" id="return" min="${today}" value="${state.ret || inAWeek}" required></label></p>
 
@@ -116,8 +203,11 @@ function renderForm(root) {
     <div id="tips"></div>
   `;
   root.querySelector('#searchForm').addEventListener('submit', onSearch);
-  root.querySelector('#destination').addEventListener('change', () => renderTips(root.querySelector('#destination').value));
-  renderTips(state.destination || 'TYO');
+  root.querySelector('#destination').addEventListener('change', (e) => {
+    const key = findDestinationKey(e.target.value);
+    if (key) renderTips(key);
+  });
+  renderTips(initialDestKey);
 }
 
 function renderTips(destKey) {
@@ -276,7 +366,15 @@ function onSearch(e) {
   const hel = f.querySelector('#hel').checked;
   const osl = f.querySelector('#osl').checked;
   const lon = f.querySelector('#lon').checked;
-  const destination = f.querySelector('#destination').value;
+  const destinationInput = f.querySelector('#destination').value;
+  const destination = findDestinationKey(destinationInput);
+
+  if (!destination) {
+    document.getElementById('results').innerHTML =
+      `<p class="error">Couldn't match "${destinationInput}" to an airport. Pick from the suggestions or type a 3-letter IATA code.</p>`;
+    return;
+  }
+
   const dest = DESTINATIONS[destination];
 
   if (new Date(ret) < new Date(depart)) {
