@@ -308,7 +308,8 @@ function renderTips(destKey) {
     <h3>When to fly</h3>
     <ul>
       ${tipsForDestination(dest)}
-      <li><strong>Day of week:</strong> Depart Tue/Wed/Sat, return Tue/Wed. Avoid Fri/Sun departures and Sun returns.</li>
+      <li><strong>Day of week to <em>fly</em>:</strong> Depart Tue/Wed/Sat, return Tue/Wed. Avoid Fri/Sun departures and Sun returns. This is real and documented.</li>
+      <li><strong>Day of week to <em>book</em> doesn't matter.</strong> The "book on Tuesday" rule is folklore from a 2010s fare-war pattern that hasn't been true for 10+ years. Expedia/ARC, Skyscanner, and Hopper studies all show day-of-search effect is under 1% &mdash; statistical noise lost in normal price churn. The friend who insists otherwise is repeating a 15-year-old myth.</li>
       <li><strong>How far ahead:</strong> Asia long-haul sweet spot is 8&ndash;14 weeks. Less than 6 weeks gets expensive fast; more than 5 months and prices haven't dropped yet.</li>
     </ul>
 
