@@ -309,8 +309,8 @@ function renderTips(destKey) {
     <ul>
       ${tipsForDestination(dest)}
       <li><strong>Day of week to <em>fly</em>:</strong> Depart Tue/Wed/Sat, return Tue/Wed. Avoid Fri/Sun departures and Sun returns. This is real and documented.</li>
-      <li><strong>Day of week to <em>book</em> doesn't matter.</strong> The "book on Tuesday" rule is folklore from a 2010s fare-war pattern that hasn't been true for 10+ years. Expedia/ARC, Skyscanner, and Hopper studies all show day-of-search effect is under 1% &mdash; statistical noise lost in normal price churn. The friend who insists otherwise is repeating a 15-year-old myth.</li>
       <li><strong>How far ahead:</strong> Asia long-haul sweet spot is 8&ndash;14 weeks. Less than 6 weeks gets expensive fast; more than 5 months and prices haven't dropped yet.</li>
+      <li><strong>What does <em>not</em> matter:</strong> day-of-week you book, time-of-day you book, whether you use incognito mode. See "Myths to ignore" below.</li>
     </ul>
 
     <h3>Routing tricks</h3>
@@ -321,13 +321,34 @@ function renderTips(destKey) {
       <li><strong>Position-flight separately.</strong> If the cheap intercontinental leg starts in London/Frankfurt/Amsterdam, book that leg first, then a cheap Norwegian/Ryanair/SAS Go ticket from Stockholm to the hub. Sometimes saves 2000+ SEK.</li>
     </ul>
 
-    <h3>VPN and currency tricks</h3>
+    <h3>VPN and currency &mdash; what actually works</h3>
     <ul>
-      <li><strong>VPN to Asia for intra-Asia flights.</strong> Local budget carriers (Cebu Pacific, VietJet, Lion Air, AirAsia) sometimes show 10&ndash;25% cheaper fares from a .ph / .vn / .id / .my IP, billed in local currency. Useful for once-you're-there hops, less so for the long-haul leg from Sweden.</li>
-      <li><strong>Currency arbitrage is real.</strong> Same flight priced in PHP / VND / IDR / INR can be cheaper than its EUR/SEK equivalent. Pay with a no-FX-fee card (Revolut, Wise) to avoid bank markup eating the savings.</li>
-      <li><strong>Mostly myth, ignore:</strong> "browser cookies drive prices up." Google Flights and Skyscanner show the same prices regardless of cookies or IP &mdash; they pull from the same fare distribution APIs. Incognito mode does nothing for them.</li>
-      <li><strong>For ARN&rarr;Asia long-haul, VPN doesn't help.</strong> Major carriers (SAS, Finnair, Qatar, Turkish, BA) price globally. Your fare is anchored to ARN as origin regardless of where your IP says you are.</li>
-      <li><strong>Where it does help on long-haul:</strong> some airlines have country-specific promos invisible to outside IPs &mdash; e.g. JAL's domestic Japan deals only show from a .jp IP. Worth a 10-second check on the airline's local site if you're already comparing.</li>
+      <li><strong>VPN to Asia for intra-Asia flights.</strong> Local budget carriers (Cebu Pacific, VietJet, Lion Air, AirAsia) sometimes show 10&ndash;25% cheaper fares from a .ph / .vn / .id / .my IP, billed in local currency. Useful for once-you're-there hops, not for the long-haul leg from Sweden.</li>
+      <li><strong>Currency arbitrage is real.</strong> Same flight priced in PHP / VND / IDR / INR can be cheaper than its EUR/SEK equivalent. Pay with a no-FX-fee card (Revolut, Wise) so bank markup doesn't eat the savings.</li>
+      <li><strong>Some airlines run country-locked promos.</strong> JAL's Japan-domestic deals only show from a .jp IP. Worth a 10-second check on the airline's local site if you're already comparing.</li>
+    </ul>
+
+    <h3>Myths to ignore</h3>
+    <p>Everyone "knows" these. None of them are true. Each costs you time or money if you act on them.</p>
+    <ul>
+      <li><strong>"Book on Tuesday."</strong> Folklore from a 2010s AA/Delta Tuesday-afternoon fare-war pattern that hasn't been true for 10+ years. Day-of-search effect is under 1% in studies by Expedia/ARC, Skyscanner, and Hopper &mdash; statistical noise. The day you click doesn't matter.</li>
+      <li><strong>"Search incognito or clear cookies &mdash; sites raise prices when they see you've searched before."</strong> Debunked many times (ITA, Skyscanner, FairFly). Prices change with demand and inventory, not your cookie history. Incognito mode does nothing for fare prices.</li>
+      <li><strong>"Use a VPN to a poor country to get cheaper international flights."</strong> Mostly false for major Western metasearch (Google Flights, Skyscanner, Momondo all return the same fares regardless of IP, because they pull the same fare APIs). Real only for local Asian budget carriers in local currency &mdash; see the section above.</li>
+      <li><strong>"Wait for last-minute deals."</strong> Works for cruises and hotel rooms with empty inventory. Does not work for international flights. Long-haul sub-2-week prices almost always spike, often 50&ndash;100%. The deals are 8&ndash;14 weeks out, not the night before.</li>
+      <li><strong>"Book exactly N days out."</strong> 21, 47, 54, 67 &mdash; pick a number, someone has written a Medium post about it. None are magic. Sweet spot is a window of weeks, not a single date. Use Skyscanner's whole-month view to see the actual price curve for your dates.</li>
+      <li><strong>"Round-trip is always cheaper than two one-ways."</strong> Increasingly false. Modern airlines often price one-ways at exactly half the round-trip, and budget carriers always do. Always check both before booking.</li>
+      <li><strong>"Booking each leg separately saves money."</strong> Sometimes true (especially when one leg is on a budget carrier the metasearch missed). Often false, and you lose protection: if leg 1 is delayed, leg 2 is on you. Calculate explicitly and budget for missed-connection insurance if you go this route.</li>
+      <li><strong>"Calling the airline gets you a better fare."</strong> You'll pay a phone-booking surcharge (typically 25&ndash;100 SEK) instead of saving money. Rare exception: complex multi-city with mileage where the website is broken.</li>
+      <li><strong>"Mileage redemption is free."</strong> Plus fuel surcharges (often 2000&ndash;5000 SEK on long-haul), plus taxes, plus a redemption value of 25&ndash;60% below cash on most economy routes. Always compare to the cash price first &mdash; mileage is a deal mainly for premium cabins.</li>
+      <li><strong>"Mistake fares are always honored."</strong> US DOT mandates honoring them, but the EU and most non-US carriers can void within 24h with a refund. Don't book non-refundable hotels until your ticket clears the 72h "this fare is real" mark.</li>
+      <li><strong>"Budget airlines are always cheapest."</strong> Often false after bags (~25 EUR), seat selection (~15), priority boarding (~10), and food. Total cost frequently matches mainstream carriers without the schedule reliability, free rebooking, or alliance miles.</li>
+      <li><strong>"Black Friday / Cyber Monday flight deals."</strong> Theatrical. Real fare drops happen when an airline has too much capacity on a specific route and competitors react &mdash; not on a marketing day. Track prices on Google Flights instead of waiting for Black Friday.</li>
+      <li><strong>"The airline's own website is always cheapest."</strong> Often false &mdash; metasearch and consolidators can be 10&ndash;30% cheaper. <em>But</em>: if the airline matches the price, book directly with them. You get better refund, rebooking, and irregular-operations rights than any consolidator gives you.</li>
+      <li><strong>"Saturday night stay required for cheap fares."</strong> True before ~2010, mostly gone now. Some legacy carriers still have it on specific routes, but it's no longer a general rule.</li>
+      <li><strong>"Avoid red-eye flights."</strong> Red-eyes are often the cheapest flights of the day on long-haul routes &mdash; that's why they exist. If sleep on the plane works for you, they're a feature.</li>
+      <li><strong>"Hidden city ticketing always works."</strong> It works for one-way tickets where you're OK losing any return leg. On a roundtrip, no-showing segment 1 cancels every later segment in the booking automatically. Some airlines (Lufthansa, AA) ban repeat offenders or sue them. The savings are rarely worth the risk for a normal trip.</li>
+      <li><strong>"Multi-city is always cheaper than two round-trips."</strong> Sometimes true, often false, depends on routing. Try both.</li>
+      <li><strong>"You should book at midnight."</strong> No airline updates fares at any specific clock time globally. Fares update on inventory changes, which happen continuously.</li>
     </ul>
 
     <h3>Sites and tools</h3>
