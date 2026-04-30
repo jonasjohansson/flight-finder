@@ -1,0 +1,43 @@
+body {
+  font-family: Times, "Times New Roman", serif;
+  max-width: 720px;
+  margin: 2em auto;
+  padding: 0 1em;
+  background: #fff;
+  color: #000;
+}
+
+h1 {
+  font-size: 1.6em;
+  margin-bottom: 0.2em;
+}
+
+table {
+  font-family: Courier, monospace;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+input, button {
+  font-family: inherit;
+  font-size: 1em;
+}
+
+button {
+  padding: 4px 12px;
+}
+
+.error {
+  color: #a00;
+}
+
+.status {
+  font-style: italic;
+  margin: 1em 0;
+}
