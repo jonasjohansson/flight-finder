@@ -115,10 +115,9 @@ Two possible outcomes:
 
 **Step 3: Record the result in this file**
 
-Append a single line under this task:
-```
-CORS result on 2026-04-29: OK / BLOCKED
-```
+CORS result on 2026-04-30: **BLOCKED** — Kiwi sends no `Access-Control-Allow-Origin`, browser preflight fails. Proxy required.
+
+Note: switched from planned Flask proxy to stdlib-only `http.server` proxy in Task 7 to avoid the venv + pip install friction.
 
 **Step 4: Commit**
 
