@@ -30,11 +30,47 @@ const SITES = [
 ];
 
 const ORIGINS = {
-  ARN: { iata: 'ARN', name: 'stockholm-sweden', label: 'Stockholm (ARN)' },
-  CPH: { iata: 'CPH', name: 'copenhagen-denmark', label: 'Copenhagen (CPH)' },
-  HEL: { iata: 'HEL', name: 'helsinki-finland', label: 'Helsinki (HEL)' },
-  OSL: { iata: 'OSL', name: 'oslo-norway', label: 'Oslo (OSL)' },
-  LON: { iata: 'LON', name: 'london-united-kingdom', label: 'London (any airport)' },
+  // Nordic
+  ARN: { iata: 'ARN', name: 'stockholm-sweden', label: 'Stockholm, Sweden', region: 'nordic' },
+  GOT: { iata: 'GOT', name: 'gothenburg-sweden', label: 'Gothenburg, Sweden', region: 'nordic' },
+  CPH: { iata: 'CPH', name: 'copenhagen-denmark', label: 'Copenhagen, Denmark', region: 'nordic' },
+  HEL: { iata: 'HEL', name: 'helsinki-finland', label: 'Helsinki, Finland', region: 'nordic' },
+  OSL: { iata: 'OSL', name: 'oslo-norway', label: 'Oslo, Norway', region: 'nordic' },
+  KEF: { iata: 'KEF', name: 'reykjavik-iceland', label: 'Reykjavík, Iceland', region: 'nordic' },
+  // UK / Ireland
+  LON: { iata: 'LON', name: 'london-united-kingdom', label: 'London (any airport), UK', region: 'uk' },
+  DUB: { iata: 'DUB', name: 'dublin-ireland', label: 'Dublin, Ireland', region: 'uk' },
+  EDI: { iata: 'EDI', name: 'edinburgh-united-kingdom', label: 'Edinburgh, UK', region: 'uk' },
+  MAN: { iata: 'MAN', name: 'manchester-united-kingdom', label: 'Manchester, UK', region: 'uk' },
+  // Western Europe
+  CDG: { iata: 'CDG', name: 'paris-france', label: 'Paris (CDG), France', region: 'eu' },
+  AMS: { iata: 'AMS', name: 'amsterdam-netherlands', label: 'Amsterdam, Netherlands', region: 'eu' },
+  FRA: { iata: 'FRA', name: 'frankfurt-germany', label: 'Frankfurt, Germany', region: 'eu' },
+  MUC: { iata: 'MUC', name: 'munich-germany', label: 'Munich, Germany', region: 'eu' },
+  BER: { iata: 'BER', name: 'berlin-germany', label: 'Berlin, Germany', region: 'eu' },
+  ZRH: { iata: 'ZRH', name: 'zurich-switzerland', label: 'Zurich, Switzerland', region: 'eu' },
+  VIE: { iata: 'VIE', name: 'vienna-austria', label: 'Vienna, Austria', region: 'eu' },
+  BRU: { iata: 'BRU', name: 'brussels-belgium', label: 'Brussels, Belgium', region: 'eu' },
+  // Southern Europe
+  MAD: { iata: 'MAD', name: 'madrid-spain', label: 'Madrid, Spain', region: 'eu' },
+  BCN: { iata: 'BCN', name: 'barcelona-spain', label: 'Barcelona, Spain', region: 'eu' },
+  FCO: { iata: 'FCO', name: 'rome-italy', label: 'Rome, Italy', region: 'eu' },
+  MXP: { iata: 'MXP', name: 'milan-italy', label: 'Milan, Italy', region: 'eu' },
+  LIS_O: { iata: 'LIS', name: 'lisbon-portugal', label: 'Lisbon, Portugal', region: 'eu' },
+  ATH_O: { iata: 'ATH', name: 'athens-greece', label: 'Athens, Greece', region: 'eu' },
+  // Eastern Europe
+  WAW: { iata: 'WAW', name: 'warsaw-poland', label: 'Warsaw, Poland', region: 'eu' },
+  PRG: { iata: 'PRG', name: 'prague-czechia', label: 'Prague, Czechia', region: 'eu' },
+  BUD: { iata: 'BUD', name: 'budapest-hungary', label: 'Budapest, Hungary', region: 'eu' },
+  // Middle East gateways
+  IST_O: { iata: 'IST', name: 'istanbul-turkey', label: 'Istanbul, Turkey', region: 'me' },
+  DXB_O: { iata: 'DXB', name: 'dubai-united-arab-emirates', label: 'Dubai, UAE', region: 'me' },
+  DOH_O: { iata: 'DOH', name: 'doha-qatar', label: 'Doha, Qatar', region: 'me' },
+  // North America
+  JFK_O: { iata: 'JFK', name: 'new-york-united-states', label: 'New York (JFK), USA', region: 'na' },
+  LAX_O: { iata: 'LAX', name: 'los-angeles-united-states', label: 'Los Angeles, USA', region: 'na' },
+  SFO_O: { iata: 'SFO', name: 'san-francisco-united-states', label: 'San Francisco, USA', region: 'na' },
+  YYZ_O: { iata: 'YYZ', name: 'toronto-canada', label: 'Toronto, Canada', region: 'na' },
 };
 
 const DESTINATIONS = {
@@ -134,80 +170,122 @@ function buildLinks(origin, destination, params) {
   }));
 }
 
-function destinationDisplayValue(key) {
-  const d = DESTINATIONS[key];
-  return d ? `${d.label} (${d.iata})` : '';
+function airportDisplayValue(map, key) {
+  const a = map[key];
+  return a ? `${a.label} (${a.iata})` : '';
 }
 
-function findDestinationKey(value) {
+function findAirportKey(map, value) {
   if (!value) return null;
   const v = value.trim().toLowerCase();
-  // Match by displayed value (case-insensitive)
-  for (const [key, d] of Object.entries(DESTINATIONS)) {
-    if (`${d.label} (${d.iata})`.toLowerCase() === v) return key;
+  for (const [key, a] of Object.entries(map)) {
+    if (`${a.label} (${a.iata})`.toLowerCase() === v) return key;
   }
-  // Match by raw IATA in parens — e.g. "(TYO)" or just "TYO"
   const iataMatch = value.match(/\b([A-Z]{3})\b/i);
   if (iataMatch) {
     const iata = iataMatch[1].toUpperCase();
-    for (const [key, d] of Object.entries(DESTINATIONS)) {
-      if (d.iata === iata) return key;
+    for (const [key, a] of Object.entries(map)) {
+      if (a.iata === iata) return key;
     }
   }
-  // Match by any label substring
-  for (const [key, d] of Object.entries(DESTINATIONS)) {
-    if (d.label.toLowerCase().includes(v) && v.length >= 3) return key;
+  for (const [key, a] of Object.entries(map)) {
+    if (a.label.toLowerCase().includes(v) && v.length >= 3) return key;
   }
   return null;
 }
+
+const destinationDisplayValue = (k) => airportDisplayValue(DESTINATIONS, k);
+const findDestinationKey = (v) => findAirportKey(DESTINATIONS, v);
+const originDisplayValue = (k) => airportDisplayValue(ORIGINS, k);
+const findOriginKey = (v) => findAirportKey(ORIGINS, v);
 
 function renderForm(root) {
   const state = loadState();
   const today = new Date().toISOString().slice(0, 10);
   const inAWeek = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-  const datalistOptions = Object.entries(DESTINATIONS)
+  const destDatalist = Object.entries(DESTINATIONS)
+    .map(([k, v]) => `<option value="${v.label} (${v.iata})">`)
+    .join('');
+  const originDatalist = Object.entries(ORIGINS)
     .map(([k, v]) => `<option value="${v.label} (${v.iata})">`)
     .join('');
   const initialDestKey = state.destination && DESTINATIONS[state.destination] ? state.destination : 'TYO';
   const initialDestValue = destinationDisplayValue(initialDestKey);
+  const initialOriginKey = state.origin && ORIGINS[state.origin] ? state.origin : 'ARN';
+  const initialOriginValue = originDisplayValue(initialOriginKey);
 
   root.innerHTML = `
     <form id="searchForm">
+      <p>
+        <label>From:
+          <input type="text" id="origin" list="origins"
+                 value="${initialOriginValue}" placeholder="Type city, country, or IATA code" required>
+        </label>
+        <datalist id="origins">${originDatalist}</datalist>
+      </p>
       <p>
         <label>To:
           <input type="text" id="destination" list="destinations"
                  value="${initialDestValue}" placeholder="Type city, country, or IATA code" required>
         </label>
-        <datalist id="destinations">${datalistOptions}</datalist>
+        <datalist id="destinations">${destDatalist}</datalist>
       </p>
       <p><label>Depart: <input type="date" id="depart" min="${today}" value="${state.depart || today}" required></label></p>
       <p><label>Return: <input type="date" id="return" min="${today}" value="${state.ret || inAWeek}" required></label></p>
 
-      <div class="callout">
-        <strong>Also search Copenhagen.</strong> CPH&ndash;Asia is regularly
-        1000&ndash;2500 SEK cheaper than ARN&ndash;Asia because more
-        carriers compete (SAS, Finnair, Qatar, ANA via partners).
-        The X2000 train Stockholm&ndash;Copenhagen is 4h 30m,
-        ~400&ndash;600 SEK if you book ahead.
-        <br><br>
-        <label><input type="checkbox" id="cph" ${state.cph ? 'checked' : ''}> Include Copenhagen (CPH)</label>
-      </div>
-
-      <p><label><input type="checkbox" id="hel" ${state.hel ? 'checked' : ''}> Also try Helsinki (HEL) &mdash; Finnair flies <em>direct</em> to Tokyo / Seoul / Bangkok, often the cheapest one-stop from Europe</label></p>
-      <p><label><input type="checkbox" id="osl" ${state.osl ? 'checked' : ''}> Also try Oslo (OSL) &mdash; less common but occasionally beats Stockholm</label></p>
-      <p><label><input type="checkbox" id="lon" ${state.lon ? 'checked' : ''}> Also try London (LHR/LGW/etc.) &mdash; biggest Europe&ndash;Asia market, BA/JAL/ANA/Virgin/Cathay all compete, often the absolute cheapest fares if you can get to London cheaply</label></p>
+      <div id="altOrigins"></div>
 
       <p><button type="submit">Find flights</button></p>
     </form>
     <div id="results"></div>
     <div id="tips"></div>
   `;
+  renderAltOrigins(initialOriginKey, state);
   root.querySelector('#searchForm').addEventListener('submit', onSearch);
   root.querySelector('#destination').addEventListener('change', (e) => {
     const key = findDestinationKey(e.target.value);
     if (key) renderTips(key);
   });
+  root.querySelector('#origin').addEventListener('change', (e) => {
+    const key = findOriginKey(e.target.value);
+    if (key) renderAltOrigins(key, loadState());
+  });
   renderTips(initialDestKey);
+}
+
+function renderAltOrigins(primaryKey, state) {
+  const el = document.getElementById('altOrigins');
+  if (!el) return;
+  const primary = ORIGINS[primaryKey];
+  if (!primary || primary.region !== 'nordic') {
+    el.innerHTML = `<p class="hint">Tip: from your primary airport, run the search across all four sites below. From any non-Nordic origin we don't suggest extra alt-origins (the Stockholm&ndash;Copenhagen train trick doesn't apply).</p>`;
+    return;
+  }
+  const showCallout = primary.iata === 'ARN' || primary.iata === 'GOT';
+  const altKeys = ['CPH', 'HEL', 'OSL', 'LON'].filter((k) => k !== primaryKey);
+  const altLabels = {
+    CPH: 'Include Copenhagen (CPH) &mdash; often the cheapest Nordic origin',
+    HEL: 'Also try Helsinki (HEL) &mdash; Finnair flies <em>direct</em> to Tokyo / Seoul / Bangkok, often the cheapest one-stop from Europe',
+    OSL: 'Also try Oslo (OSL) &mdash; less common but occasionally wins',
+    LON: 'Also try London (LHR/LGW/etc.) &mdash; biggest Europe&ndash;Asia market, BA/JAL/ANA/Virgin/Cathay all compete',
+  };
+  const checks = altKeys
+    .map((k) => `<p><label><input type="checkbox" id="alt_${k}" ${state[`alt_${k}`] ? 'checked' : ''}> ${altLabels[k]}</label></p>`)
+    .join('');
+  const callout = showCallout && altKeys.includes('CPH')
+    ? `<div class="callout">
+        <strong>Also search Copenhagen.</strong> CPH&ndash;Asia is regularly
+        1000&ndash;2500 SEK cheaper than ARN&ndash;Asia because more carriers
+        compete (SAS, Finnair, Qatar, ANA via partners). The X2000 train
+        Stockholm&ndash;Copenhagen is 4h 30m, ~400&ndash;600 SEK if you book ahead.
+        <br><br>
+        <label><input type="checkbox" id="alt_CPH" ${state.alt_CPH ? 'checked' : ''}> Include Copenhagen (CPH)</label>
+      </div>`
+    : '';
+  const otherChecks = showCallout
+    ? altKeys.filter((k) => k !== 'CPH').map((k) => `<p><label><input type="checkbox" id="alt_${k}" ${state[`alt_${k}`] ? 'checked' : ''}> ${altLabels[k]}</label></p>`).join('')
+    : checks;
+  el.innerHTML = callout + otherChecks;
 }
 
 function renderTips(destKey) {
@@ -388,16 +466,19 @@ function onSearch(e) {
   const f = e.target;
   const depart = f.querySelector('#depart').value;
   const ret = f.querySelector('#return').value;
-  const cph = f.querySelector('#cph').checked;
-  const hel = f.querySelector('#hel').checked;
-  const osl = f.querySelector('#osl').checked;
-  const lon = f.querySelector('#lon').checked;
+  const originInput = f.querySelector('#origin').value;
   const destinationInput = f.querySelector('#destination').value;
+  const origin = findOriginKey(originInput);
   const destination = findDestinationKey(destinationInput);
 
+  if (!origin) {
+    document.getElementById('results').innerHTML =
+      `<p class="error">Couldn't match "${originInput}" to a starting airport. Pick from the suggestions or type a 3-letter IATA code.</p>`;
+    return;
+  }
   if (!destination) {
     document.getElementById('results').innerHTML =
-      `<p class="error">Couldn't match "${destinationInput}" to an airport. Pick from the suggestions or type a 3-letter IATA code.</p>`;
+      `<p class="error">Couldn't match "${destinationInput}" to a destination. Pick from the suggestions or type a 3-letter IATA code.</p>`;
     return;
   }
 
@@ -409,13 +490,18 @@ function onSearch(e) {
     return;
   }
 
-  saveState({ depart, ret, cph, hel, osl, lon, destination });
+  const altState = {};
+  ['CPH', 'HEL', 'OSL', 'LON'].forEach((k) => {
+    const cb = f.querySelector(`#alt_${k}`);
+    altState[`alt_${k}`] = cb ? cb.checked : false;
+  });
 
-  const origins = [ORIGINS.ARN];
-  if (cph) origins.push(ORIGINS.CPH);
-  if (hel) origins.push(ORIGINS.HEL);
-  if (osl) origins.push(ORIGINS.OSL);
-  if (lon) origins.push(ORIGINS.LON);
+  saveState({ depart, ret, origin, destination, ...altState });
+
+  const origins = [ORIGINS[origin]];
+  ['CPH', 'HEL', 'OSL', 'LON'].forEach((k) => {
+    if (altState[`alt_${k}`] && k !== origin && ORIGINS[k]) origins.push(ORIGINS[k]);
+  });
 
   const sections = origins.map((origin) => {
     const links = buildLinks(origin, dest, { depart, ret });
