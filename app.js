@@ -274,8 +274,8 @@ function renderTips(destKey) {
 function tipsForDestination(dest) {
   const seasonalRules = {
     TYO: `
-      <li><strong>Avoid:</strong> Cherry blossom (late Mar&ndash;early Apr), Golden Week (29 Apr&ndash;5 May), Obon (mid-Aug), New Year (29 Dec&ndash;5 Jan). Prices spike 50&ndash;100%.</li>
-      <li><strong>Sweet spots:</strong> Mid-Sep to mid-Nov (autumn, mild, fewer tourists), late Jan to mid-Mar (cold but cheapest of the year).</li>
+      <li><strong>Avoid:</strong> Cherry blossom (late Mar&ndash;early Apr), Golden Week (29 Apr&ndash;5 May), Obon (mid-Aug), New Year (29 Dec&ndash;5 Jan). Prices spike 50&ndash;100% &mdash; you'll see 14000&ndash;18000 SEK in these windows.</li>
+      <li><strong>Sweet spots:</strong> Mid-Sep to mid-Nov (autumn, mild, fewer tourists), late Jan to mid-Mar (cold but cheapest of the year, 7000&ndash;9000 SEK is realistic).</li>
       <li><strong>Tokyo airports:</strong> HND closer to city (~30 min, 500 yen monorail). NRT often 500 SEK cheaper to fly into but 90 min + 3000 yen via N'EX. Often cancels out.</li>
     `,
     ICN: `
@@ -346,24 +346,41 @@ function tipsForDestination(dest) {
 }
 
 function rulesForDestination(dest) {
+  const note = '<p class="hint">Calibrated to current (post-2022) prices. Europe&ndash;Asia long-haul is structurally 40&ndash;60% more expensive than it was pre-pandemic &mdash; jet fuel, fewer carriers, less Russian airspace. The "cheap" of 2018 isn\'t coming back.</p>';
   const rules = {
-    TYO: '<ul><li><strong>Under 4500 SEK</strong> &mdash; book immediately.</li><li><strong>4500&ndash;5500 SEK</strong> &mdash; fair shoulder-season price, book.</li><li><strong>5500&ndash;6500 SEK</strong> &mdash; OK in peak, otherwise wait.</li><li><strong>Over 6500 SEK</strong> &mdash; wrong dates. Move 2&ndash;3 days and re-search.</li></ul>',
-    KIX: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 6500 SEK</strong> &mdash; consider Tokyo + train (Shinkansen 14000 yen) instead.</li></ul>',
-    ICN: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 6500 SEK</strong> &mdash; wait or move dates.</li></ul>',
-    HKG: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 7000 SEK</strong> &mdash; wait, especially via London with Cathay.</li></ul>',
-    TPE: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 7500 SEK</strong> &mdash; wait or rethink.</li></ul>',
-    BKK: '<ul><li><strong>Under 4500 SEK</strong> &mdash; book immediately, BKK should be the cheapest Asian city.</li><li><strong>4500&ndash;5500 SEK</strong> &mdash; fair.</li><li><strong>Over 6500 SEK</strong> &mdash; wrong dates.</li></ul>',
-    SIN: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait.</li></ul>',
-    PEK: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 7500 SEK</strong> &mdash; wait.</li></ul>',
-    PVG: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 7500 SEK</strong> &mdash; wait.</li></ul>',
-    DEL: '<ul><li><strong>Under 5000 SEK</strong> &mdash; book.</li><li><strong>5000&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 7500 SEK</strong> &mdash; wait or fly via Doha/Istanbul.</li></ul>',
-    BOM: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait.</li></ul>',
-    DPS: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair (long-haul + extra leg).</li><li><strong>Over 10000 SEK</strong> &mdash; wait.</li></ul>',
-    KUL: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait.</li></ul>',
-    HAN: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait or fly into BKK and continue overland.</li></ul>',
-    SGN: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait.</li></ul>',
+    TYO: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book immediately, this is rare.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; very good shoulder-season price, book.</li><li><strong>8500&ndash;11000 SEK</strong> &mdash; fair, normal range.</li><li><strong>11000&ndash;13000 SEK</strong> &mdash; high but typical of peak (cherry blossom, Golden Week, summer). Wait if you can.</li><li><strong>Over 13000 SEK</strong> &mdash; wrong dates. Move by 1&ndash;2 weeks and re-search.</li></ul>',
+    KIX: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>9000&ndash;12000 SEK</strong> &mdash; high but normal in peak.</li><li><strong>Over 12000 SEK</strong> &mdash; consider Tokyo + Shinkansen (14000 yen) instead.</li></ul>',
+    FUK: '<ul><li><strong>Under 7500 SEK</strong> &mdash; book.</li><li><strong>7500&ndash;10000 SEK</strong> &mdash; fair.</li><li><strong>Over 12000 SEK</strong> &mdash; fly into TYO/KIX and connect on a 5000-yen domestic.</li></ul>',
+    OKA: '<ul><li><strong>Under 9000 SEK</strong> &mdash; book.</li><li><strong>9000&ndash;12000 SEK</strong> &mdash; fair (always requires a Japan connection).</li><li><strong>Over 13000 SEK</strong> &mdash; book TYO + cheap Peach/JAL domestic separately.</li></ul>',
+    CTS: '<ul><li><strong>Under 8000 SEK</strong> &mdash; book.</li><li><strong>8000&ndash;11000 SEK</strong> &mdash; fair (usually via TYO).</li><li><strong>Over 12000 SEK</strong> &mdash; book TYO + domestic separately.</li></ul>',
+    ICN: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>8500&ndash;11000 SEK</strong> &mdash; high, peak season.</li><li><strong>Over 11000 SEK</strong> &mdash; move dates.</li></ul>',
+    PUS: '<ul><li><strong>Under 7500 SEK</strong> &mdash; book.</li><li><strong>7500&ndash;10000 SEK</strong> &mdash; fair (usually via ICN).</li><li><strong>Over 11000 SEK</strong> &mdash; ICN + KTX train (3h, 60000 KRW).</li></ul>',
+    HKG: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>8500&ndash;11000 SEK</strong> &mdash; high but normal. Try via London with Cathay.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    TPE: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>9000&ndash;12000 SEK</strong> &mdash; high. EVA via BKK or Vienna often cheapest.</li><li><strong>Over 12000 SEK</strong> &mdash; rethink.</li></ul>',
+    BKK: '<ul><li><strong>Under 5500 SEK</strong> &mdash; book immediately, BKK is the cheapest Asia destination from Europe.</li><li><strong>5500&ndash;7000 SEK</strong> &mdash; very good.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair, normal.</li><li><strong>Over 9500 SEK</strong> &mdash; wait or move dates.</li></ul>',
+    CNX: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;9000 SEK</strong> &mdash; fair (usually via BKK).</li><li><strong>Over 10000 SEK</strong> &mdash; book BKK + 400 SEK AirAsia/Nok hop.</li></ul>',
+    HKT: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9500 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; BKK + cheap domestic.</li></ul>',
+    SIN: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>9000&ndash;11000 SEK</strong> &mdash; high. SQ from Frankfurt or LHR often beats SE direct.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    PEK: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    PVG: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    CAN: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; via PEK or HKG instead.</li></ul>',
+    DEL: '<ul><li><strong>Under 6000 SEK</strong> &mdash; book.</li><li><strong>6000&ndash;8000 SEK</strong> &mdash; fair.</li><li><strong>Over 10500 SEK</strong> &mdash; wait or fly via Doha/Istanbul.</li></ul>',
+    BOM: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    BLR: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; via BOM/DEL with cheap domestic.</li></ul>',
+    DPS: '<ul><li><strong>Under 9000 SEK</strong> &mdash; book.</li><li><strong>9000&ndash;12000 SEK</strong> &mdash; fair (long-haul + extra leg).</li><li><strong>Over 14000 SEK</strong> &mdash; SIN + AirAsia hop separately.</li></ul>',
+    CGK: '<ul><li><strong>Under 7500 SEK</strong> &mdash; book.</li><li><strong>7500&ndash;10000 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; via SIN/KUL.</li></ul>',
+    KUL: '<ul><li><strong>Under 7000 SEK</strong> &mdash; book.</li><li><strong>7000&ndash;9000 SEK</strong> &mdash; fair.</li><li><strong>Over 11000 SEK</strong> &mdash; wait.</li></ul>',
+    HAN: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>Over 10500 SEK</strong> &mdash; BKK + overland or cheap VietJet.</li></ul>',
+    SGN: '<ul><li><strong>Under 6500 SEK</strong> &mdash; book.</li><li><strong>6500&ndash;8500 SEK</strong> &mdash; fair.</li><li><strong>Over 10500 SEK</strong> &mdash; BKK + cheap domestic.</li></ul>',
+    MNL: '<ul><li><strong>Under 7500 SEK</strong> &mdash; book.</li><li><strong>7500&ndash;10000 SEK</strong> &mdash; fair.</li><li><strong>Over 12000 SEK</strong> &mdash; via HKG/BKK.</li></ul>',
+    DXB: '<ul><li><strong>Under 4500 SEK</strong> &mdash; book.</li><li><strong>4500&ndash;6500 SEK</strong> &mdash; fair (Emirates and Qatar compete hard).</li><li><strong>Over 8000 SEK</strong> &mdash; wrong dates.</li></ul>',
+    DOH: '<ul><li><strong>Under 4500 SEK</strong> &mdash; book.</li><li><strong>4500&ndash;6500 SEK</strong> &mdash; fair.</li><li><strong>Over 8000 SEK</strong> &mdash; wait.</li></ul>',
+    IST: '<ul><li><strong>Under 3500 SEK</strong> &mdash; book.</li><li><strong>3500&ndash;5500 SEK</strong> &mdash; fair.</li><li><strong>Over 7000 SEK</strong> &mdash; wrong dates.</li></ul>',
+    SYD: '<ul><li><strong>Under 11000 SEK</strong> &mdash; book.</li><li><strong>11000&ndash;14000 SEK</strong> &mdash; fair (it\'s the long one).</li><li><strong>Over 16000 SEK</strong> &mdash; wait or rethink.</li></ul>',
+    MEL: '<ul><li><strong>Under 11000 SEK</strong> &mdash; book.</li><li><strong>11000&ndash;14000 SEK</strong> &mdash; fair.</li><li><strong>Over 16000 SEK</strong> &mdash; wait.</li></ul>',
+    AKL: '<ul><li><strong>Under 12000 SEK</strong> &mdash; book.</li><li><strong>12000&ndash;15000 SEK</strong> &mdash; fair.</li><li><strong>Over 17000 SEK</strong> &mdash; wait.</li></ul>',
   };
-  return rules[dest.iata] || '<p>No rule of thumb for this destination yet. Use the others on the page as a calibration.</p>';
+  return note + (rules[dest.iata] || '<p>No specific rule of thumb for this destination yet. Use the calibration note above plus the others on the page.</p>');
 }
 
 function onSearch(e) {
