@@ -1,34 +1,33 @@
 # Flight Finder
 
-Tiny static site that searches Kiwi Tequila for cheap flights from
-Stockholm (ARN) to Tokyo (any TYO airport), including multi-leg routes
-via European hubs.
+A small static page that searches Stockholm (and optionally Copenhagen)
+to Tokyo across four flight sites at once. No API, no proxy, no key.
+
+The "ultimate" angle isn't smarter routing — it's that the cheapest
+deal lives in different places on different days. This launcher saves
+you from filling the same form four times.
+
+## Sites it searches
+
+- **Google Flights** — best inventory and price calendar
+- **Kiwi.com** — virtual interlining (combines airlines that don't normally partner)
+- **Skyscanner** — budget carriers and whole-month flexibility
+- **Momondo** — metasearch outliers others miss
 
 ## Run
 
-The site is served from the existing localhost setup at:
 http://localhost/org/jonasjohansson/flight-finder/
 
-It needs the proxy running alongside (Kiwi blocks browser CORS):
+Pick depart + return dates, optionally check "Also try Copenhagen",
+click Find flights. A table of links per origin appears — click each
+to see results on that site.
 
-```bash
-cd ~/Documents/GitHub/org/jonasjohansson/flight-finder
-python3 proxy.py
-```
-
-The proxy listens on `http://127.0.0.1:8788`. Leave it running while
-you use the site. Ctrl-C to stop.
-
-## API key
-
-Get a free key at https://tequila.kiwi.com and paste it on first load.
-Stored in browser localStorage only — never in source.
-Use the "Reset API key" link in the footer to swap keys.
+Last-used dates are remembered in browser localStorage.
 
 ## Files
 
 - `index.html` — markup
 - `style.css` — 90s-web style
-- `app.js` — Kiwi calls + rendering
-- `proxy.py` — stdlib-only CORS proxy (no pip deps)
-- `docs/plans/` — design + implementation plan
+- `app.js` — URL builders + form
+- `docs/plans/` — design + plan history (note: the original Kiwi-API
+  plan was abandoned because Tequila moved to affiliate-only signup)
