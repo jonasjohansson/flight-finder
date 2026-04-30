@@ -242,6 +242,15 @@ function renderTips(destKey) {
       <li><strong>Position-flight separately.</strong> If the cheap intercontinental leg starts in London/Frankfurt/Amsterdam, book that leg first, then a cheap Norwegian/Ryanair/SAS Go ticket from Stockholm to the hub. Sometimes saves 2000+ SEK.</li>
     </ul>
 
+    <h3>VPN and currency tricks</h3>
+    <ul>
+      <li><strong>VPN to Asia for intra-Asia flights.</strong> Local budget carriers (Cebu Pacific, VietJet, Lion Air, AirAsia) sometimes show 10&ndash;25% cheaper fares from a .ph / .vn / .id / .my IP, billed in local currency. Useful for once-you're-there hops, less so for the long-haul leg from Sweden.</li>
+      <li><strong>Currency arbitrage is real.</strong> Same flight priced in PHP / VND / IDR / INR can be cheaper than its EUR/SEK equivalent. Pay with a no-FX-fee card (Revolut, Wise) to avoid bank markup eating the savings.</li>
+      <li><strong>Mostly myth, ignore:</strong> "browser cookies drive prices up." Google Flights and Skyscanner show the same prices regardless of cookies or IP &mdash; they pull from the same fare distribution APIs. Incognito mode does nothing for them.</li>
+      <li><strong>For ARN&rarr;Asia long-haul, VPN doesn't help.</strong> Major carriers (SAS, Finnair, Qatar, Turkish, BA) price globally. Your fare is anchored to ARN as origin regardless of where your IP says you are.</li>
+      <li><strong>Where it does help on long-haul:</strong> some airlines have country-specific promos invisible to outside IPs &mdash; e.g. JAL's domestic Japan deals only show from a .jp IP. Worth a 10-second check on the airline's local site if you're already comparing.</li>
+    </ul>
+
     <h3>Sites and tools</h3>
     <ul>
       <li><strong>Google Flights "Date grid"</strong> &mdash; shows price for &plusmn;3 days around your dates in one view. Click "Date grid" or "Price graph" once a search loads.</li>
