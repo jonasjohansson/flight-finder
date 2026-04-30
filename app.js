@@ -68,10 +68,11 @@ function buildLinks(origin, params) {
 function renderForm(root) {
   const state = loadState();
   const today = new Date().toISOString().slice(0, 10);
+  const inAWeek = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
   root.innerHTML = `
     <form id="searchForm">
-      <p><label>Depart: <input type="date" id="depart" min="${today}" value="${state.depart || ''}" required></label></p>
-      <p><label>Return: <input type="date" id="return" min="${today}" value="${state.ret || ''}" required></label></p>
+      <p><label>Depart: <input type="date" id="depart" min="${today}" value="${state.depart || today}" required></label></p>
+      <p><label>Return: <input type="date" id="return" min="${today}" value="${state.ret || inAWeek}" required></label></p>
       <p><label><input type="checkbox" id="cph" ${state.cph ? 'checked' : ''}> Also try Copenhagen (CPH) &mdash; often 1000&ndash;2000 SEK cheaper</label></p>
       <p><button type="submit">Find flights</button></p>
     </form>
