@@ -1,31 +1,98 @@
 const STORAGE = 'flightFinderState';
 
+// Azair stitches European/MENA low-cost carriers into self-transfer routings.
+// It only has inventory for short/medium-haul out of Europe, so we hide it for
+// long-haul routes (Asia, Oceania, the Americas) where it just returns empty.
+const AZAIR_REGIONS = new Set(['nordic', 'uk', 'eu', 'me', 'africa']);
+
+// `core` sites are the broad metasearch engines that "Open all" launches in tabs.
+// The rest are niche/specialist tools shown in the results table only.
+// `available(ctx)` (optional) hides a site for routes it can't serve.
 const SITES = [
   {
     name: 'Google Flights',
     note: 'best inventory, price calendar',
+    core: true,
     url: ({ fromIATA, toIATA, depart, ret }) =>
       `https://www.google.com/travel/flights?q=Flights+from+${fromIATA}+to+${toIATA}+on+${depart}+returning+${ret}`,
   },
   {
-    name: 'Kiwi.com',
-    note: 'virtual interlining (mix airlines)',
-    url: ({ fromName, toName, depart, ret }) =>
-      `https://www.kiwi.com/en/search/results/${fromName}/${toName}/${depart}/${ret}`,
-  },
-  {
     name: 'Skyscanner',
     note: 'budget carriers, whole-month search',
+    core: true,
     url: ({ fromIATA, toIATA, depart, ret }) => {
       const yymmdd = (iso) => iso.slice(2).replace(/-/g, '');
       return `https://www.skyscanner.com/transport/flights/${fromIATA.toLowerCase()}/${toIATA.toLowerCase()}/${yymmdd(depart)}/${yymmdd(ret)}/`;
     },
   },
   {
+    name: 'Kiwi.com',
+    note: 'virtual interlining (mix airlines)',
+    core: true,
+    url: ({ fromName, toName, depart, ret }) =>
+      `https://www.kiwi.com/en/search/results/${fromName}/${toName}/${depart}/${ret}`,
+  },
+  {
     name: 'Momondo',
     note: 'metasearch outliers',
+    core: true,
     url: ({ fromIATA, toIATA, depart, ret }) =>
-      `https://www.momondo.com/flight-search/${fromIATA}-${toIATA}/${depart}/${ret}`,
+      `https://www.momondo.com/flight-search/${fromIATA}-${toIATA}/${depart}/${ret}?sort=bestflight_a`,
+  },
+  {
+    name: 'Trip.com',
+    note: 'Asia OTA exclusive fares',
+    core: true,
+    url: ({ fromIATA, toIATA, depart, ret }) =>
+      `https://www.trip.com/flights/showfarefirst?dcity=${fromIATA}&acity=${toIATA}&ddate=${depart}&rdate=${ret}&triptype=rt&class=y&quantity=1&locale=en-US&curr=EUR`,
+  },
+  {
+    name: 'WayAway',
+    note: 'Aviasales pool, Asian + EE consolidators',
+    url: ({ fromIATA, toIATA, depart, ret }) =>
+      `https://wayaway.io/search?origin_iata=${fromIATA}&destination_iata=${toIATA}&depart_date=${depart}&return_date=${ret}&adults=1&trip_class=0&with_request=true`,
+  },
+  {
+    name: 'Kiwi Nomad',
+    note: 'open-jaw, reorders stops',
+    url: ({ fromName, toName, depart, ret }) =>
+      `https://www.kiwi.com/en/multicity/results/${fromName}~${toName}~${depart}/${toName}~${fromName}~${ret}`,
+  },
+  {
+    name: 'Seats.aero',
+    note: 'award seats with miles (outbound + 7 days)',
+    url: ({ fromIATA, toIATA, depart }) =>
+      `https://seats.aero/search?origins=${fromIATA}&destinations=${toIATA}&date=${depart}&additional_days=true&additional_days_num=7&applicable_cabin=any`,
+  },
+  {
+    name: 'Azair',
+    note: 'lowcost self-transfer combos (Europe)',
+    available: ({ fromRegion, toRegion }) => AZAIR_REGIONS.has(fromRegion) && AZAIR_REGIONS.has(toRegion),
+    url: ({ fromName, toName, fromIATA, toIATA, depart, ret }) =>
+      `https://www.azair.eu/azfin.php?lang=en&searchtype=flexi&tp=0&isOneway=return&srcAirport=${fromName}+%5B${fromIATA}%5D&srcTypedText=${fromIATA}&dstAirport=${toName}+%5B${toIATA}%5D&dstTypedText=${toIATA}&depdate=${depart}&arrdate=${ret}&minDaysStay=3&maxDaysStay=14&maxChng=2&autoprice=true&currency=EUR&indexSubmit=Search`,
+  },
+];
+
+// Route-independent tools that can't be expressed as a simple per-route deep link.
+const POWER_TOOLS = [
+  {
+    group: 'Advanced search engines',
+    blurb: "Find or build itineraries the metasearch table won't show, then book them on one of the sites above.",
+    tools: [
+      { name: 'ITA Matrix by Google', url: 'https://matrix.itasoftware.com/', desc: 'The most powerful fare-query engine — advanced routing/fare codes and calendar matrices. You design the itinerary, then book it elsewhere.' },
+      { name: 'Skiplagged', url: 'https://skiplagged.com/', desc: 'Surfaces hidden-city (skiplagging) fares every other engine deliberately hides. One-way only; never check a bag.' },
+      { name: 'Dohop', url: 'https://www.dohop.com/', desc: 'Self-connecting itineraries across unaffiliated carriers — a second opinion on virtual interlining vs Kiwi.' },
+      { name: 'AwardFares', url: 'https://awardfares.com/search', desc: 'Award-seat availability and miles pricing across many programs, with a multi-date timeline. Complements Seats.aero.' },
+    ],
+  },
+  {
+    group: 'Error-fare & deal alerts',
+    blurb: 'Subscribe and wait — these catch mispriced and flash fares out of Nordic/European airports.',
+    tools: [
+      { name: 'Secret Flying', url: 'https://www.secretflying.com/europe-flight-deals/', desc: 'Gold-standard error/mistake-fare alerts, with per-region pages (including a Stockholm feed).' },
+      { name: "Jack's Flight Club", url: 'https://jacksflightclub.com/eu', desc: 'Curated deal and error-fare newsletter that explicitly covers Nordic departure airports.' },
+      { name: 'Fly4free', url: 'https://www.fly4free.com/flight-deals/scandinavia/', desc: 'Europe-first error-fare aggregator with a dedicated Scandinavia page.' },
+    ],
   },
 ];
 
@@ -497,9 +564,11 @@ function resolveTyped(value, pool) {
 function buildLinks(originIata, destinationIata, params) {
   const o = AIRPORTS[originIata];
   const d = AIRPORTS[destinationIata];
-  return SITES.map((site) => ({
+  const ctx = { fromRegion: o.region, toRegion: d.region };
+  return SITES.filter((site) => !site.available || site.available(ctx)).map((site) => ({
     site: site.name,
     note: site.note,
+    core: !!site.core,
     href: site.url({
       fromName: o.name,
       toName: d.name,
@@ -525,6 +594,7 @@ function plusDaysISO(iso, days) {
 function renderForm(root) {
   const state = loadState();
   const today = todayISO();
+  const coreCount = SITES.filter((s) => s.core).length;
   const initialDepart = state.depart && state.depart >= today ? state.depart : today;
   const initialReturn = state.ret && state.ret >= initialDepart ? state.ret : plusDaysISO(initialDepart, 7);
   const initialOrigin = state.origin && AIRPORTS[state.origin]?.origin ? state.origin : 'ARN';
@@ -561,7 +631,7 @@ function renderForm(root) {
 
       <div class="actions">
         <button type="submit" id="findBtn">Find flights</button>
-        <button type="button" id="openAllBtn" title="Open all 4 sites in new tabs">Open all 4 sites</button>
+        <button type="button" id="openAllBtn" title="Open the ${coreCount} core metasearch sites in new tabs">Open all ${coreCount} sites</button>
       </div>
 
       <div class="currency-toggle">
@@ -572,6 +642,7 @@ function renderForm(root) {
       </div>
     </form>
     <div id="results"></div>
+    <div id="powertools"></div>
     <div id="tips"></div>
   `;
 
@@ -587,6 +658,7 @@ function renderForm(root) {
   destCb.setSelected(initialDest);
 
   renderAltOrigins(initialOrigin, state);
+  renderPowerTools(root);
   renderTips(initialDest, currency);
 
   root.querySelector('#searchForm').addEventListener('submit', (e) => onSearch(e, originCb, destCb));
@@ -621,6 +693,10 @@ function renderForm(root) {
         returnInput.value = plusDaysISO(dep, 7);
       }
     }
+    patchState({ depart: departInput.value, ret: returnInput.value });
+  });
+  returnInput.addEventListener('change', () => {
+    patchState({ ret: returnInput.value });
   });
 
   root.querySelectorAll('input[name="currency"]').forEach((el) => {
@@ -634,6 +710,25 @@ function renderForm(root) {
 
 function getCurrency() {
   return loadState().currency || detectCurrency();
+}
+
+// --- Power tools ---
+
+function renderPowerTools(root) {
+  const el = root.querySelector('#powertools');
+  if (!el) return;
+  const groups = POWER_TOOLS.map((g) => {
+    const items = g.tools
+      .map((t) => `<li><a href="${t.url}" target="_blank" rel="noopener">${escapeHtml(t.name)}</a> &mdash; ${t.desc}</li>`)
+      .join('');
+    return `<h3>${escapeHtml(g.group)}</h3><p class="hint">${g.blurb}</p><ul>${items}</ul>`;
+  }).join('');
+  el.innerHTML = `
+    <details>
+      <summary><strong>Power tools</strong> &mdash; route-independent engines &amp; deal alerts that aren't a simple deep link</summary>
+      ${groups}
+    </details>
+  `;
 }
 
 // --- Alt origins ---
@@ -1175,7 +1270,7 @@ function onSearch(e, originCb, destCb) {
     .join('');
 
   document.getElementById('results').innerHTML =
-    sections + `<p class="hint">Click each link to compare. The cheapest is rarely the same site twice in a row. Or use <strong>Open all 4 sites</strong> above to launch them in tabs.</p>`;
+    sections + `<p class="hint">Click each link to compare. The cheapest is rarely the same site twice in a row. Or use <strong>Open all sites</strong> above to launch the core metasearch engines in tabs. Don't miss the specialist rows &mdash; Trip.com, WayAway, Seats.aero (award), Kiwi Nomad (open-jaw) &mdash; and the <strong>Power tools</strong> section below.</p>`;
 
   renderTips(destKey, getCurrency());
 }
@@ -1197,7 +1292,7 @@ function onOpenAll(originCb, destCb) {
 
   const links = buildLinks(originKey, destKey, { depart, ret });
   const opened = [];
-  for (const l of links) {
+  for (const l of links.filter((l) => l.core)) {
     const a = document.createElement('a');
     a.href = l.href;
     a.target = '_blank';
@@ -1209,7 +1304,7 @@ function onOpenAll(originCb, destCb) {
   }
   const o = AIRPORTS[originKey];
   const d = AIRPORTS[destKey];
-  const status = `<p class="status">Triggered ${opened.length} tabs: ${opened.join(', ')}. If fewer opened, your browser blocked the popups &mdash; allow popups for this site, or use the links below.</p>`;
+  const status = `<p class="status">Triggered ${opened.length} tabs: ${opened.join(', ')}. If fewer opened, your browser blocked the popups &mdash; allow popups for this site, or use the links below. The specialist tools below (award, open-jaw, self-transfer&hellip;) open one at a time.</p>`;
 
   const linkRows = links
     .map(
